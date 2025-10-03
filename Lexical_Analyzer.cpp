@@ -10,7 +10,7 @@ int lexer(char* token){
 }
 
 
-int main(int argc, char* argv[]){
+int main(){
    //main logic will go here. 
 
     ifstream myfile;
