@@ -25,11 +25,7 @@ Token lexer(ifstream &myFile)
 
 	string current_lexeme = "";
 
-	if (!myFile)
-	{
-		cerr << "Error opening file" << endl;
-		return t;
-	}
+	
 
 	while (myFile.get(ch))
 	{
@@ -37,45 +33,51 @@ Token lexer(ifstream &myFile)
 		{
 			if (isalpha(current_lexeme[0]))
 			{
+				//I push the current lexeme to the lexeme vector 
 				t.lexeme.push_back(current_lexeme);
-				// determine token type here
-				t.token.push_back(IdentifierFSM(current_lexeme));
+				
+				t.token.push_back(IdentifierFSM(current_lexeme)); // I check if it is a identifier 
 
-				if (checkKeyword(current_lexeme) != "identifier " + current_lexeme)
+				if (checkKeyword(current_lexeme) != "identifier " + current_lexeme) //if it aint a identfier i check if it is a keyword
 				{
-					t.token.push_back(checkKeyword(current_lexeme));
+					t.token.push_back(checkKeyword(current_lexeme)); // go to keyword function
 				}
 
-				current_lexeme.clear();
+				current_lexeme.clear(); // clear the current lexeme so i can start a new one
 				continue;
 			}
-			else if (isdigit(current_lexeme[0]))
+			else if (isdigit(current_lexeme[0]))  //if the current lexeme starts with a digit
 			{
-				t.lexeme.push_back(current_lexeme);
-				// determine token type here
-				t.token.push_back(NumberFSM(current_lexeme));
-				// call FSM functions here
+				t.lexeme.push_back(current_lexeme); // we push the current lexeme to the lexeme vector
+				
+				t.token.push_back(NumberFSM(current_lexeme)); // we check if it is a number or not 
+			
 
-				current_lexeme.clear();
+				current_lexeme.clear(); // we clear the current lexeme so we can start a new one
 				continue;
 			}
-			else if (checkOperator(current_lexeme) != "invalid")
+			else if (checkOperator(current_lexeme) != "invalid") // we check if it is an operator
 			{
-				t.lexeme.push_back(current_lexeme);
-				t.token.push_back(checkOperator(current_lexeme));
-				current_lexeme.clear();
+				t.lexeme.push_back(current_lexeme); // we push the current lexeme to the lexeme vector
+				t.token.push_back(checkOperator(current_lexeme)); //we go to the operator function
+				current_lexeme.clear(); // we clear the current lexeme so we can start a new one
 				continue;
 			}
-			else if (checkSeparator(current_lexeme) != "invalid")
+			else if (checkSeparator(current_lexeme) != "invalid") // we check if it is a separator
 			{
-				t.lexeme.push_back(current_lexeme);
-				t.token.push_back(checkSeparator(current_lexeme));
-				current_lexeme.clear();
+				t.lexeme.push_back(current_lexeme); // we push the current lexeme to the lexeme vector
+				t.token.push_back(checkSeparator(current_lexeme)); // we go to the separator function
+				current_lexeme.clear(); // we clear the current lexeme so we can start a new one
 				continue;
 			}
 			else
 			{
-				current_lexeme.clear();
+				if (current_lexeme != "") // if the current lexeme is not empty
+				{
+					t.lexeme.push_back(current_lexeme); // we push the current lexeme to the lexeme vector
+					t.token.push_back("invalid"); // we push invalid to the token vector
+					current_lexeme.clear(); // we clear the current lexeme so we can start a new one
+				}
 				continue;
 			}
 		}
@@ -262,20 +264,32 @@ int main()
 	// main logic will go here.
 	ifstream myFile;
 	ofstream outFile;
-	Token t;
+	Token t; // contains two vectors: token and lexeme
 
 	myFile.open("Rat25f.txt");
 	outFile.open("output.txt");
+	if (!myFile)
+	{
+		cerr << "Error opening input file" << endl;
+		return 1;
+	}
+	if (!outFile)
+	{
+		cerr << "Error opening output file" << endl;
+		return 1;
+	}
 
+	//While the file is open, keep calling the lexer function until the ened of the file is reached
 	while (true)
 	{
 		t = lexer(myFile);
-		if (t.lexeme.empty())
+		if (myFile.eof())
 		{
 			break;
 		}
 	}
 
+	//Print the contents of the token and lexeme vectors to the console and to the output file
 	for (size_t i = 0; i < t.lexeme.size(); i++)
 	{
 		cout << t.token[i] << " " << t.lexeme[i] << endl;
