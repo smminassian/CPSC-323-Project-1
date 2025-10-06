@@ -1,10 +1,10 @@
-keyword while while
-separator ( (
-identifier fahr fahr
-operator < <
-operator = =
-identifier upper upper
-separator ) )
-identifier a a
-operator = =
-real 23.00 23.00
+keyword  while
+separator  (
+invalid fahr
+operator  <
+operator  =
+identifier  upper
+separator  )
+invalid a
+operator  =
+identifier  23.00
