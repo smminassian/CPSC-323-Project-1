@@ -146,7 +146,7 @@ string IdentifierFSM(const string &input)
 		switch (state)
 		{
 		case IdBeginning:
-			if (isalpha(ch) == true || ch == '_')
+			if (isalpha(ch) == true)
 			{
 				state = IdValid;
 			}
@@ -157,7 +157,7 @@ string IdentifierFSM(const string &input)
 			break;
 
 		case IdValid:
-			if (isalnum(ch) == true || ch == '_')
+			if (isalnum(ch) == true)
 			{
 				state = IdValid;
 			}
@@ -176,7 +176,7 @@ string IdentifierFSM(const string &input)
 		}
 	}
 
-	if (state == IdValid)
+	if (state == IdValid || state == IdInvalid)
 	{
 		return "identifier";
 	}
@@ -306,7 +306,7 @@ int main()
     vector<string> inputFiles = { "Rat25f.txt", "Rat25f2.txt", "Rat25f3.txt" };
     vector<string> outputFiles = { "output.txt", "output2.txt", "output3.txt" };
 
-    // Ensure the vectors match in size
+    // Making sure the vectors match in size
     if (inputFiles.size() != outputFiles.size())
     {
         cerr << "Error: Input and output file lists do not match in size." << endl;
@@ -321,7 +321,7 @@ int main()
         if (!myFile)
         {
             cerr << "Error opening input file: " << inputFiles[i] << endl;
-            continue; // skip this file and move to next
+            continue; 
         }
 
         if (!outFile)
