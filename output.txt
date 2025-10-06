@@ -1,0 +1,10 @@
+keyword while while
+separator ( (
+invalid fahr
+operator < <
+operator = =
+invalid upper
+separator ) )
+invalid a
+operator = =
+real 23.00 23.00

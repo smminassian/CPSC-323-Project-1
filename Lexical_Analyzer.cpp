@@ -27,67 +27,106 @@ Token lexer(ifstream &myFile)
 
 	
 
-	while (myFile.get(ch))
-	{
-		if (isspace(ch))
-		{
-			if (isalpha(current_lexeme[0]))
-			{
-				//I push the current lexeme to the lexeme vector 
-				t.lexeme.push_back(current_lexeme);
-				
-				t.token.push_back(IdentifierFSM(current_lexeme)); // I check if it is a identifier 
+	 while (myFile.get(ch))
+    {
+        if (checkSeparator(string(1, ch)) != "invalid" || checkOperator(string(1, ch)) != "invalid")
+        {
+            if (!current_lexeme.empty())
+            {
+                if (checkKeyword(current_lexeme) != "identifier " + current_lexeme)
+                {
+                    t.lexeme.push_back(current_lexeme);
+                    t.token.push_back(checkKeyword(current_lexeme));
+                }
+                else if (isalpha(current_lexeme[0]))
+                {
+                    t.lexeme.push_back(current_lexeme);
+                    t.token.push_back(IdentifierFSM(current_lexeme));
+                }
+                else if (isdigit(current_lexeme[0]))
+                {
+                    t.lexeme.push_back(current_lexeme);
+                    t.token.push_back(NumberFSM(current_lexeme));
+                }
+                else
+                {
+                    t.lexeme.push_back(current_lexeme);
+                    t.token.push_back("invalid");
+                }
+                current_lexeme.clear();
+            }
 
-				if (checkKeyword(current_lexeme) != "identifier " + current_lexeme) //if it aint a identfier i check if it is a keyword
-				{
-					t.token.push_back(checkKeyword(current_lexeme)); // go to keyword function
-				}
+            string op(1, ch);
+            if (checkOperator(op) != "invalid")
+            {
+                t.lexeme.push_back(op);
+                t.token.push_back(checkOperator(op));
+            }
+            else if (checkSeparator(op) != "invalid")
+            {
+                t.lexeme.push_back(op);
+                t.token.push_back(checkSeparator(op));
+            }
+            continue;
+        }
 
-				current_lexeme.clear(); // clear the current lexeme so i can start a new one
-				continue;
-			}
-			else if (isdigit(current_lexeme[0]))  //if the current lexeme starts with a digit
-			{
-				t.lexeme.push_back(current_lexeme); // we push the current lexeme to the lexeme vector
-				
-				t.token.push_back(NumberFSM(current_lexeme)); // we check if it is a number or not 
-			
+        if (isspace(ch))
+        {
+            if (!current_lexeme.empty())
+            {
+                if (checkKeyword(current_lexeme) != "identifier " + current_lexeme)
+                {
+                    t.lexeme.push_back(current_lexeme);
+                    t.token.push_back(checkKeyword(current_lexeme));
+                }
+                else if (isalpha(current_lexeme[0]))
+                {
+                    t.lexeme.push_back(current_lexeme);
+                    t.token.push_back(IdentifierFSM(current_lexeme));
+                }
+                else if (isdigit(current_lexeme[0]))
+                {
+                    t.lexeme.push_back(current_lexeme);
+                    t.token.push_back(NumberFSM(current_lexeme));
+                }
+                else
+                {
+                    t.lexeme.push_back(current_lexeme);
+                    t.token.push_back("invalid");
+                }
+                current_lexeme.clear();
+            }
+            continue;
+        }
 
-				current_lexeme.clear(); // we clear the current lexeme so we can start a new one
-				continue;
-			}
-			else if (checkOperator(current_lexeme) != "invalid") // we check if it is an operator
-			{
-				t.lexeme.push_back(current_lexeme); // we push the current lexeme to the lexeme vector
-				t.token.push_back(checkOperator(current_lexeme)); //we go to the operator function
-				current_lexeme.clear(); // we clear the current lexeme so we can start a new one
-				continue;
-			}
-			else if (checkSeparator(current_lexeme) != "invalid") // we check if it is a separator
-			{
-				t.lexeme.push_back(current_lexeme); // we push the current lexeme to the lexeme vector
-				t.token.push_back(checkSeparator(current_lexeme)); // we go to the separator function
-				current_lexeme.clear(); // we clear the current lexeme so we can start a new one
-				continue;
-			}
-			else
-			{
-				if (current_lexeme != "") // if the current lexeme is not empty
-				{
-					t.lexeme.push_back(current_lexeme); // we push the current lexeme to the lexeme vector
-					t.token.push_back("invalid"); // we push invalid to the token vector
-					current_lexeme.clear(); // we clear the current lexeme so we can start a new one
-				}
-				continue;
-			}
-		}
-		current_lexeme += ch;
-	}
-	for (int i = 0; i < t.lexeme.size(); i++)
-	{
-		cout << t.token[i] << " " << t.lexeme[i] << endl;
-	}
-	return t;
+        current_lexeme += ch;
+    }
+
+    if (!current_lexeme.empty())
+    {
+        if (checkKeyword(current_lexeme) != "identifier " + current_lexeme)
+        {
+            t.lexeme.push_back(current_lexeme);
+            t.token.push_back(checkKeyword(current_lexeme));
+        }
+        else if (isalpha(current_lexeme[0]))
+        {
+            t.lexeme.push_back(current_lexeme);
+            t.token.push_back(IdentifierFSM(current_lexeme));
+        }
+        else if (isdigit(current_lexeme[0]))
+        {
+            t.lexeme.push_back(current_lexeme);
+            t.token.push_back(NumberFSM(current_lexeme));
+        }
+        else
+        {
+            t.lexeme.push_back(current_lexeme);
+            t.token.push_back("invalid");
+        }
+    }
+
+    return t;
 }
 
 const int IdBeginning = 0;
@@ -105,7 +144,7 @@ string IdentifierFSM(const string &input)
 		switch (state)
 		{
 		case IdBeginning:
-			if (isalpha(ch) == true)
+			if (isalpha(ch) == true || ch == '_')
 			{
 				state = IdValid;
 			}
@@ -116,7 +155,7 @@ string IdentifierFSM(const string &input)
 			break;
 
 		case IdValid:
-			if (isalnum(ch) == true)
+			if (isalnum(ch) == true || ch == '_')
 			{
 				state = IdValid;
 			}
@@ -225,7 +264,7 @@ string NumberFSM(const string &input)
 
 string checkKeyword(const string &input)
 {
-	if (input == "if" || input == "then" || input == "else" || input == "end" || input == "repeat" || input == "until" || input == "read" || input == "write" || input == "begin")
+	if (input == "if" || input == "then" || input == "else" || input == "end" || input == "repeat" || input == "until" || input == "read" || input == "write" || input == "begin" || input == "while")
 	{
 		return "keyword " + input;
 	}
@@ -237,7 +276,7 @@ string checkKeyword(const string &input)
 
 string checkOperator(const string &input)
 {
-	if (input == "+" || input == "-" || input == "*" || input == "/" || input == "=" || input == "<" || input == ">" || input == "<=" || input == ">=" || input == "!=")
+	if (input == "+" || input == "-" || input == "*" || input == "/" || input == "<=" || input == ">=" || input == "=" || input == "<" || input == ">" || input == "!=")
 	{
 		return "operator " + input;
 	}
