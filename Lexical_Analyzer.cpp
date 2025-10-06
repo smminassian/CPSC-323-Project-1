@@ -25,108 +25,107 @@ Token lexer(ifstream &myFile)
 
 	string current_lexeme = "";
 
-	
+	while (myFile.get(ch))
+	{
 
-	 while (myFile.get(ch))
-    {
-        if (checkSeparator(string(1, ch)) != "invalid" || checkOperator(string(1, ch)) != "invalid")
-        {
-            if (!current_lexeme.empty())
-            {
-                if (checkKeyword(current_lexeme) != "identifier " + current_lexeme)
-                {
-                    t.lexeme.push_back(current_lexeme);
-                    t.token.push_back(checkKeyword(current_lexeme));
-                }
-                else if (isalpha(current_lexeme[0]))
-                {
-                    t.lexeme.push_back(current_lexeme);
-                    t.token.push_back(IdentifierFSM(current_lexeme));
-                }
-                else if (isdigit(current_lexeme[0]))
-                {
-                    t.lexeme.push_back(current_lexeme);
-                    t.token.push_back(NumberFSM(current_lexeme));
-                }
-                else
-                {
-                    t.lexeme.push_back(current_lexeme);
-                    t.token.push_back("invalid");
-                }
-                current_lexeme.clear();
-            }
+		if (checkSeparator(string(1, ch)) != "invalid" || checkOperator(string(1, ch)) != "invalid")
+		{
+			if (!current_lexeme.empty())
+			{
+				if (checkKeyword(current_lexeme) != "identifier")
+				{
+					t.lexeme.push_back(current_lexeme);
+					t.token.push_back(checkKeyword(current_lexeme));
+				}
+				else if (isalpha(current_lexeme[0]))
+				{
+					t.lexeme.push_back(current_lexeme);
+					t.token.push_back(IdentifierFSM(current_lexeme));
+				}
+				else if (isdigit(current_lexeme[0]))
+				{
+					t.lexeme.push_back(current_lexeme);
+					t.token.push_back(NumberFSM(current_lexeme));
+				}
+				else
+				{
+					t.lexeme.push_back(current_lexeme);
+					t.token.push_back("invalid");
+				}
+				current_lexeme.clear();
+			}
 
-            string op(1, ch);
-            if (checkOperator(op) != "invalid")
-            {
-                t.lexeme.push_back(op);
-                t.token.push_back(checkOperator(op));
-            }
-            else if (checkSeparator(op) != "invalid")
-            {
-                t.lexeme.push_back(op);
-                t.token.push_back(checkSeparator(op));
-            }
-            continue;
-        }
+			string op(1, ch);
+			if (checkOperator(op) != "invalid")
+			{
+				t.lexeme.push_back(op);
+				t.token.push_back(checkOperator(op));
+			}
+			else if (checkSeparator(op) != "invalid")
+			{
+				t.lexeme.push_back(op);
+				t.token.push_back(checkSeparator(op));
+			}
+			continue;
+		}
 
-        if (isspace(ch))
-        {
-            if (!current_lexeme.empty())
-            {
-                if (checkKeyword(current_lexeme) != "identifier " + current_lexeme)
-                {
-                    t.lexeme.push_back(current_lexeme);
-                    t.token.push_back(checkKeyword(current_lexeme));
-                }
-                else if (isalpha(current_lexeme[0]))
-                {
-                    t.lexeme.push_back(current_lexeme);
-                    t.token.push_back(IdentifierFSM(current_lexeme));
-                }
-                else if (isdigit(current_lexeme[0]))
-                {
-                    t.lexeme.push_back(current_lexeme);
-                    t.token.push_back(NumberFSM(current_lexeme));
-                }
-                else
-                {
-                    t.lexeme.push_back(current_lexeme);
-                    t.token.push_back("invalid");
-                }
-                current_lexeme.clear();
-            }
-            continue;
-        }
+		if (isspace(ch))
+		{
+			if (!current_lexeme.empty())
+			{
+				if (checkKeyword(current_lexeme) != "identifier ")
+				{
+					t.lexeme.push_back(current_lexeme);
+					t.token.push_back(checkKeyword(current_lexeme));
+				}
+				else if (isalpha(current_lexeme[0]))
+				{
+					t.lexeme.push_back(current_lexeme);
+					t.token.push_back(IdentifierFSM(current_lexeme));
+				}
+				else if (isdigit(current_lexeme[0]))
+				{
+					t.lexeme.push_back(current_lexeme);
+					t.token.push_back(NumberFSM(current_lexeme));
+				}
+				else
+				{
+					t.lexeme.push_back(current_lexeme);
+					t.token.push_back("invalid");
+				}
+				current_lexeme.clear();
+			}
+			continue;
+		}
 
-        current_lexeme += ch;
-    }
+		current_lexeme += ch;
+	}
 
-    if (!current_lexeme.empty())
-    {
-        if (checkKeyword(current_lexeme) != "identifier " + current_lexeme)
-        {
-            t.lexeme.push_back(current_lexeme);
-            t.token.push_back(checkKeyword(current_lexeme));
-        }
-        else if (isalpha(current_lexeme[0]))
-        {
-            t.lexeme.push_back(current_lexeme);
-            t.token.push_back(IdentifierFSM(current_lexeme));
-        }
-        else if (isdigit(current_lexeme[0]))
-        {
-            t.lexeme.push_back(current_lexeme);
-            t.token.push_back(NumberFSM(current_lexeme));
-        }
-        else
-        {
-            t.lexeme.push_back(current_lexeme);
-            t.token.push_back("invalid");
-        }
-    }
+	if (!current_lexeme.empty())
+	{
+		if (checkKeyword(current_lexeme) != "identifier " + current_lexeme)
+		{
+			t.lexeme.push_back(current_lexeme);
+			t.token.push_back(checkKeyword(current_lexeme));
+		}
+		else if (isalpha(current_lexeme[0]))
+		{
+			t.lexeme.push_back(current_lexeme);
+			t.token.push_back(IdentifierFSM(current_lexeme));
+		}
+		else if (isdigit(current_lexeme[0]))
+		{
+			t.lexeme.push_back(current_lexeme);
+			t.token.push_back(NumberFSM(current_lexeme));
+		}
+		else
+		{
+			t.lexeme.push_back(current_lexeme);
+			t.token.push_back("invalid");
+		}
+	}
 
-    return t;
+	return t;
 }
 
 const int IdBeginning = 0;
@@ -176,7 +175,7 @@ string IdentifierFSM(const string &input)
 
 	if (state == IdValid)
 	{
-		return "identifier " + input;
+		return "identifier";
 	}
 	else
 	{
@@ -304,6 +303,7 @@ int main()
 	ifstream myFile;
 	ofstream outFile;
 	Token t; // contains two vectors: token and lexeme
+	
 
 	myFile.open("Rat25f.txt");
 	outFile.open("output.txt");
@@ -318,21 +318,14 @@ int main()
 		return 1;
 	}
 
-	//While the file is open, keep calling the lexer function until the ened of the file is reached
-	while (true)
-	{
-		t = lexer(myFile);
-		if (myFile.eof())
-		{
-			break;
-		}
-	}
+	//This line bascially passeses the whole file to the lexer function. The output of the lexer is store in t
+	t = lexer(myFile);
 
-	//Print the contents of the token and lexeme vectors to the console and to the output file
+	// Print the contents of the token and lexeme vectors to the console and to the output file
 	for (size_t i = 0; i < t.lexeme.size(); i++)
 	{
-		cout << t.token[i] << " " << t.lexeme[i] << endl;
 		outFile << t.token[i] << " " << t.lexeme[i] << endl;
+		cout << t.token[i] << " " << t.lexeme[i] << endl;
 	}
 
 	myFile.close();

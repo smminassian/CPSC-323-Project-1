@@ -1,10 +1,10 @@
 keyword while while
 separator ( (
-invalid fahr
+identifier fahr fahr
 operator < <
 operator = =
-invalid upper
+identifier upper upper
 separator ) )
-invalid a
+identifier a a
 operator = =
 real 23.00 23.00
