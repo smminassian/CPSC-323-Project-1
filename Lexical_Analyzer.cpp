@@ -27,23 +27,28 @@ Token lexer(ifstream &myFile)
 
 	while (myFile.get(ch))
 	{
-
+		cout << "Current character: " << ch << endl;
+		cout << "Current lexeme: " << current_lexeme << endl;
 		if (checkSeparator(string(1, ch)) != "invalid" || checkOperator(string(1, ch)) != "invalid")
 		{
 			if (!current_lexeme.empty())
 			{
+				cout << "here is lexeme in checkSeparator " << current_lexeme << endl;
 				if (checkKeyword(current_lexeme) != "identifier")
 				{
+					cout << "here is lexeme in checkKeyword " << current_lexeme << endl;
 					t.lexeme.push_back(current_lexeme);
 					t.token.push_back(checkKeyword(current_lexeme));
 				}
 				else if (isalpha(current_lexeme[0]))
 				{
+					cout << "here is lexeme in isalpha " << current_lexeme << endl;
 					t.lexeme.push_back(current_lexeme);
 					t.token.push_back(IdentifierFSM(current_lexeme));
 				}
 				else if (isdigit(current_lexeme[0]))
 				{
+					cout << "here is lexeme in isdigit " << current_lexeme << endl;
 					t.lexeme.push_back(current_lexeme);
 					t.token.push_back(NumberFSM(current_lexeme));
 				}
@@ -58,33 +63,42 @@ Token lexer(ifstream &myFile)
 			string op(1, ch);
 			if (checkOperator(op) != "invalid")
 			{
+				cout << "here is lexeme in checkOperator " << op << endl;
 				t.lexeme.push_back(op);
 				t.token.push_back(checkOperator(op));
 			}
 			else if (checkSeparator(op) != "invalid")
 			{
+				cout << "here is lexeme in checkSeparator " << op << endl;
 				t.lexeme.push_back(op);
 				t.token.push_back(checkSeparator(op));
 			}
 			continue;
 		}
 
+		cout << "did lexeme clear>? " << current_lexeme << endl;
 		if (isspace(ch))
 		{
 			if (!current_lexeme.empty())
 			{
+				cout << "here is lexeme in whitespace " << current_lexeme << endl;
 				if (checkKeyword(current_lexeme) != "identifier ")
 				{
+					cout << "here is lexeme in checkKeyword " << current_lexeme << endl;
 					t.lexeme.push_back(current_lexeme);
 					t.token.push_back(checkKeyword(current_lexeme));
+					cout << "is there a duplicate? " << t.lexeme.back() << endl;
+					cout << "is there a duplicate? " << t.lexeme.back().back() << endl;
 				}
 				else if (isalpha(current_lexeme[0]))
 				{
+					cout << "here is lexeme in isalpha " << current_lexeme << endl;
 					t.lexeme.push_back(current_lexeme);
 					t.token.push_back(IdentifierFSM(current_lexeme));
 				}
 				else if (isdigit(current_lexeme[0]))
 				{
+					cout << "here is lexeme in isdigit " << current_lexeme << endl;
 					t.lexeme.push_back(current_lexeme);
 					t.token.push_back(NumberFSM(current_lexeme));
 				}
@@ -97,7 +111,7 @@ Token lexer(ifstream &myFile)
 			}
 			continue;
 		}
-
+		cout << "adding char to current lexeme: " << ch << endl;
 		current_lexeme += ch;
 	}
 
