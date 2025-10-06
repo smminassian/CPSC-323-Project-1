@@ -1,32 +1,16 @@
 begin
-    read n;
-    read m;
-    sum = 0;
-    i = 0;
-
-    while (i < n)
+    read fahr;
+    read upper;
+    a = 0;
+    while (fahr <= upper)
     {
-        j = 0;
-        while (j < m)
-        {
-            sum = sum + (i * j);
-            j = j + 1;
-        }
-        i = i + 1;
+        a = a + 1;
+        fahr = fahr + 5;
     }
-
-    avg = sum / (n * m);
-
-    repeat
-        if (avg > 100) then
-            avg = avg - 10;
-        else
-            avg = avg + 5;
-        end
-        n = n - 1;
-    until (n == 0);
-
-    write sum;
-    write avg;
+    if (a > 10) then
+        write a;
+    else
+        write fahr;
+    end
+    write upper;
 end
-
