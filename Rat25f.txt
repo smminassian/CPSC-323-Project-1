@@ -1,1 +1,8 @@
-while (fahr <= upper) a = 23.00
+begin
+    read x;
+    read y;
+    while (x < y)
+        x = x + 1;
+    write x;
+    write y;
+end

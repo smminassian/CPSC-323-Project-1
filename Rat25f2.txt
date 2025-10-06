@@ -1,0 +1,16 @@
+begin
+    read fahr;
+    read upper;
+    a = 0;
+    while (fahr <= upper)
+    {
+        a = a + 1;
+        fahr = fahr + 5;
+    }
+    if (a > 10) then
+        write a;
+    else
+        write fahr;
+    end
+    write upper;
+end
