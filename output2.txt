@@ -1,0 +1,16 @@
+keyword  if
+invalid rate
+operator  >
+operator  =
+real  0.05
+keyword  then
+keyword  write
+separator  (
+identifier  rate
+separator  )
+keyword  else
+keyword  write
+separator  (
+identifier  0
+separator  )
+keyword  end

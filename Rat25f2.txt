@@ -1,0 +1,1 @@
+if rate >= 0.05 then write(rate) else write(0) end

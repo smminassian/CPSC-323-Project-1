@@ -1,0 +1,8 @@
+invalid x
+operator  =
+invalid y
+operator  +
+integer  2
+operator  *
+identifier  z
+separator  ;

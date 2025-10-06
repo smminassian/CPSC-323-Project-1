@@ -263,11 +263,11 @@ string NumberFSM(const string &input)
 
 	if (state == NumInt)
 	{
-		return "integer " + input;
+		return "integer " ;
 	}
 	else if (state == NumReal)
 	{
-		return "real " + input;
+		return "real " ;
 	}
 	else
 	{
@@ -279,11 +279,11 @@ string checkKeyword(const string &input)
 {
 	if (input == "if" || input == "then" || input == "else" || input == "end" || input == "repeat" || input == "until" || input == "read" || input == "write" || input == "begin" || input == "while")
 	{
-		return "keyword " + input;
+		return "keyword ";
 	}
 	else
 	{
-		return "identifier " + input;
+		return "identifier ";
 	}
 }
 
@@ -291,7 +291,7 @@ string checkOperator(const string &input)
 {
 	if (input == "+" || input == "-" || input == "*" || input == "/" || input == "<=" || input == ">=" || input == "=" || input == "<" || input == ">" || input == "!=")
 	{
-		return "operator " + input;
+		return "operator ";
 	}
 	else
 	{
@@ -303,7 +303,7 @@ string checkSeparator(const string &input)
 {
 	if (input == ";" || input == "," || input == "(" || input == ")" || input == "{" || input == "}" || input == "[" || input == "]")
 	{
-		return "separator " + input;
+		return "separator ";
 	}
 	else
 	{
@@ -319,8 +319,8 @@ int main()
 	Token t; // contains two vectors: token and lexeme
 	
 
-	myFile.open("Rat25f.txt");
-	outFile.open("output.txt");
+	myFile.open("Rat25f2.txt");
+	outFile.open("output2.txt");
 	if (!myFile)
 	{
 		cerr << "Error opening input file" << endl;
