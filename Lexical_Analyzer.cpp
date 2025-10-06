@@ -20,35 +20,113 @@ struct Token
 Token lexer(ifstream &myFile)
 {
 	Token t;
-	char ch;
+	string line;
 	cout << "Starting lexical analysis..." << endl;
 
 	string current_lexeme = "";
 
-	while (myFile.get(ch))
+	while (getline(myFile, line))
 	{
-		cout << "Current character: " << ch << endl;
-		cout << "Current lexeme: " << current_lexeme << endl;
-		if (checkSeparator(string(1, ch)) != "invalid" || checkOperator(string(1, ch)) != "invalid")
+		for (char ch : line)
 		{
+			
+			if (checkSeparator(string(1, ch)) != "invalid" || checkOperator(string(1, ch)) != "invalid")
+			{
+				if (!current_lexeme.empty())
+				{
+					
+					if (checkKeyword(current_lexeme) != "identifier")
+					{
+						
+						t.lexeme.push_back(current_lexeme);
+						t.token.push_back(checkKeyword(current_lexeme));
+					}
+					else if (isalpha(current_lexeme[0]))
+					{
+						
+						t.lexeme.push_back(current_lexeme);
+						t.token.push_back(IdentifierFSM(current_lexeme));
+					}
+					else if (isdigit(current_lexeme[0]))
+					{
+						
+						t.lexeme.push_back(current_lexeme);
+						t.token.push_back(NumberFSM(current_lexeme));
+					}
+					else
+					{
+						t.lexeme.push_back(current_lexeme);
+						t.token.push_back("invalid");
+					}
+					current_lexeme.clear();
+				}
+
+				string op(1, ch);
+				if (checkOperator(op) != "invalid")
+				{
+					
+					t.lexeme.push_back(op);
+					t.token.push_back(checkOperator(op));
+				}
+				else if (checkSeparator(op) != "invalid")
+				{
+					
+					t.lexeme.push_back(op);
+					t.token.push_back(checkSeparator(op));
+				}
+				continue;
+			}
+
+		
+			if (isspace(ch))
+			{
+				if (!current_lexeme.empty())
+				{
+					
+					if (checkKeyword(current_lexeme) != "identifier ")
+					{
+						;
+						t.lexeme.push_back(current_lexeme);
+						t.token.push_back(checkKeyword(current_lexeme));
+					}
+					else if (isalpha(current_lexeme[0]))
+					{
+						
+						t.lexeme.push_back(current_lexeme);
+						t.token.push_back(IdentifierFSM(current_lexeme));
+					}
+					else if (isdigit(current_lexeme[0]))
+					{
+						;
+						t.lexeme.push_back(current_lexeme);
+						t.token.push_back(NumberFSM(current_lexeme));
+					}
+					else
+					{
+						t.lexeme.push_back(current_lexeme);
+						t.token.push_back("invalid");
+					}
+					current_lexeme.clear();
+				}
+				continue;
+			}
+			
+			current_lexeme += ch;
+
 			if (!current_lexeme.empty())
 			{
-				cout << "here is lexeme in checkSeparator " << current_lexeme << endl;
-				if (checkKeyword(current_lexeme) != "identifier")
+				if (checkKeyword(current_lexeme) != "identifier " + current_lexeme)
 				{
-					cout << "here is lexeme in checkKeyword " << current_lexeme << endl;
 					t.lexeme.push_back(current_lexeme);
 					t.token.push_back(checkKeyword(current_lexeme));
 				}
 				else if (isalpha(current_lexeme[0]))
 				{
-					cout << "here is lexeme in isalpha " << current_lexeme << endl;
 					t.lexeme.push_back(current_lexeme);
 					t.token.push_back(IdentifierFSM(current_lexeme));
 				}
 				else if (isdigit(current_lexeme[0]))
 				{
-					cout << "here is lexeme in isdigit " << current_lexeme << endl;
 					t.lexeme.push_back(current_lexeme);
 					t.token.push_back(NumberFSM(current_lexeme));
 				}
@@ -57,91 +135,11 @@ Token lexer(ifstream &myFile)
 					t.lexeme.push_back(current_lexeme);
 					t.token.push_back("invalid");
 				}
-				current_lexeme.clear();
 			}
-
-			string op(1, ch);
-			if (checkOperator(op) != "invalid")
-			{
-				cout << "here is lexeme in checkOperator " << op << endl;
-				t.lexeme.push_back(op);
-				t.token.push_back(checkOperator(op));
-			}
-			else if (checkSeparator(op) != "invalid")
-			{
-				cout << "here is lexeme in checkSeparator " << op << endl;
-				t.lexeme.push_back(op);
-				t.token.push_back(checkSeparator(op));
-			}
-			continue;
-		}
-
-		cout << "did lexeme clear>? " << current_lexeme << endl;
-		if (isspace(ch))
-		{
-			if (!current_lexeme.empty())
-			{
-				cout << "here is lexeme in whitespace " << current_lexeme << endl;
-				if (checkKeyword(current_lexeme) != "identifier ")
-				{
-					cout << "here is lexeme in checkKeyword " << current_lexeme << endl;
-					t.lexeme.push_back(current_lexeme);
-					t.token.push_back(checkKeyword(current_lexeme));
-					cout << "is there a duplicate? " << t.lexeme.back() << endl;
-					cout << "is there a duplicate? " << t.lexeme.back().back() << endl;
-				}
-				else if (isalpha(current_lexeme[0]))
-				{
-					cout << "here is lexeme in isalpha " << current_lexeme << endl;
-					t.lexeme.push_back(current_lexeme);
-					t.token.push_back(IdentifierFSM(current_lexeme));
-				}
-				else if (isdigit(current_lexeme[0]))
-				{
-					cout << "here is lexeme in isdigit " << current_lexeme << endl;
-					t.lexeme.push_back(current_lexeme);
-					t.token.push_back(NumberFSM(current_lexeme));
-				}
-				else
-				{
-					t.lexeme.push_back(current_lexeme);
-					t.token.push_back("invalid");
-				}
-				current_lexeme.clear();
-			}
-			continue;
-		}
-		cout << "adding char to current lexeme: " << ch << endl;
-		current_lexeme += ch;
-	}
-
-	if (!current_lexeme.empty())
-	{
-		if (checkKeyword(current_lexeme) != "identifier " + current_lexeme)
-		{
-			t.lexeme.push_back(current_lexeme);
-			t.token.push_back(checkKeyword(current_lexeme));
-		}
-		else if (isalpha(current_lexeme[0]))
-		{
-			t.lexeme.push_back(current_lexeme);
-			t.token.push_back(IdentifierFSM(current_lexeme));
-		}
-		else if (isdigit(current_lexeme[0]))
-		{
-			t.lexeme.push_back(current_lexeme);
-			t.token.push_back(NumberFSM(current_lexeme));
-		}
-		else
-		{
-			t.lexeme.push_back(current_lexeme);
-			t.token.push_back("invalid");
 		}
 	}
-
 	return t;
 }
-
 const int IdBeginning = 0;
 const int IdValid = 1;
 const int IdInvalid = 2;
@@ -263,11 +261,11 @@ string NumberFSM(const string &input)
 
 	if (state == NumInt)
 	{
-		return "integer " ;
+		return "integer ";
 	}
 	else if (state == NumReal)
 	{
-		return "real " ;
+		return "real ";
 	}
 	else
 	{
@@ -317,7 +315,6 @@ int main()
 	ifstream myFile;
 	ofstream outFile;
 	Token t; // contains two vectors: token and lexeme
-	
 
 	myFile.open("Rat25f2.txt");
 	outFile.open("output2.txt");
@@ -332,7 +329,7 @@ int main()
 		return 1;
 	}
 
-	//This line bascially passeses the whole file to the lexer function. The output of the lexer is store in t
+	// This line bascially passeses the whole file to the lexer function. The output of the lexer is store in t
 	t = lexer(myFile);
 
 	// Print the contents of the token and lexeme vectors to the console and to the output file
